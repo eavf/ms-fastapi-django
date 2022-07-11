@@ -4,7 +4,7 @@ FROM python:3.10-slim
 
 COPY ./entrypoint.sh ./entrypoint.sh
 COPY ./app /app
-COPY ./requirements.txt /requirements.txt
+COPY ./requirements.txt ./requirements.txt
 
 WORKDIR /app
 
