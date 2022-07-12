@@ -17,10 +17,11 @@ RUN apt-get update && \
         make \
         gcc\
     && python3 -m pip install -r /requirements.txt \
+    && /usr/local/bin/python3 -m pip install --upgrade pip \
     && apt-get remove -y --purge make gcc build-essential \
     && apt-get autoremove -y \
     && rm -rf /var/lib/apt/lists/*
 
 RUN chmod +x /entrypoint.sh
 
-CMD [ "/entrypoint.sh"]
+CMD [ "./entrypoint.sh"]
