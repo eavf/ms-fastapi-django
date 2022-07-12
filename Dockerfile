@@ -21,6 +21,6 @@ RUN apt-get update && \
     && apt-get autoremove -y \
     && rm -rf /var/lib/apt/lists/*
 
-RUN chmod +x entrypoint.sh
+RUN chmod +x ./entrypoint.sh
 
 CMD [ "./entrypoint.sh"]
