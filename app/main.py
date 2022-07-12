@@ -5,7 +5,7 @@ from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates                          # nasztaviť templates
 
 BASE_DIR = pathlib.Path(__file__).parent                                # nasztaviť templates
-print ((BASE_DIR / "templates")  .exists())                             # nasztaviť templates
+#print ((BASE_DIR / "templates")  .exists())                             # nasztaviť templates
 
 app = FastAPI()
 
