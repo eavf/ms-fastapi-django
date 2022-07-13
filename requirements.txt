@@ -8,4 +8,5 @@ pre-commit
 python-dotenv
 aiofiles
 python-multipart
-pillow
+Pillow
+pytesseract
