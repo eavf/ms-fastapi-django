@@ -4,7 +4,7 @@ from PIL import Image
 
 BASE_DIR =pathlib.Path(__file__).parent
 IMG_DIR = BASE_DIR / "images"
-img_path = IMG_DIR / "i2.jpg"
+img_path = IMG_DIR / "i2.png"
 
 img = Image.open(img_path)
 
