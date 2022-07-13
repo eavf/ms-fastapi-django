@@ -12,6 +12,7 @@ from fastapi import (
     UploadFile,
     Request,
 )
+import pytesseract
 from fastapi.responses import HTMLResponse, FileResponse
 from fastapi.templating import Jinja2Templates                          # nasztaviť templates
 from pydantic import BaseSettings
@@ -62,9 +63,22 @@ def home_view(request: Request, settings:Settings = Depends(get_settings)):
     print (settings.debug)
     return templates.TemplateResponse("home.html", {"request": request, "abc": 123, "ddd": settings.debug})
 
-@app.post("/")              # http POST
-def home_detail_view():
-    return {"hello": "world"}
+@app.post("/")              # http POST - nie je možné na windowse
+async def predictions_view(file:UploadFile = File(...), settings:Settings = Depends(get_settings)):
+    bytes_str = io.BytesIO(await file.read())
+    try:
+        img = Image.open(bytes_str)         # opencv / cv2 options
+    except:
+        raise HTTPException(detail="Invalid image", status_code=400)
+    preds = pytesseract.image_to_string(img)
+    predictions = [x for x in preds.split("\n")]
+    return {"results": predictions, "original": preds}
+
+
+
+
+
+
 
 @app.post("/img-echo/", response_class=FileResponse)              # http POST
 async def home_detail_view(file:UploadFile = File(...), settings:Settings = Depends(get_settings)):

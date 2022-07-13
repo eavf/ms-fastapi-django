@@ -20,12 +20,11 @@ def test_get_home():
     assert Template.debug_info
 
 
-def test_post_home():
+def test_invalid_file_upload_error():
     response = client.post("/")      # requests.get("") python requests
-    assert response.status_code == 200
+    assert response.status_code == 422
     #assert response.headers['content-type'] == "text/html"
     assert "application/json" in response.headers['content-type']
-    assert response.json() == {"hello": "world"}
 
 
 # Testovanie cez prípony súborov nie je spolahlivé
@@ -75,3 +74,23 @@ def test_echo_upload():
 
     time.sleep(3)
     shutil.rmtree(UPLOAD_DIR)
+
+
+def test_prediction_upload():
+    img_saved_path =BASE_DIR / "images"
+    for path in img_saved_path.glob("*"):
+        try:
+            img = Image.open(path)
+        except:
+            img = None
+        response = client.post("/", files={"file": open(path, 'rb')})      # requests.get("") python requests
+        if img is not None:
+            #print(response.text)
+            assert response.status_code == 200
+            data = response.json()
+            #print (data)
+            assert len(data.keys()) == 2
+        else:
+            assert response.status_code == 400
+        print(response.headers)
+        print(path.suffix)
