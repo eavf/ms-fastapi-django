@@ -9,5 +9,6 @@ img_path = IMG_DIR / "i2.png"
 img = Image.open(img_path)
 
 preds = pytesseract.image_to_string(img)
+predictions = [x for x in preds.split("\n")]
 
 print(preds)
