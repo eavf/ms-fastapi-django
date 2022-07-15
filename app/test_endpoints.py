@@ -4,7 +4,7 @@ import time
 import io
 from fastapi.testclient import TestClient
 from jinja2 import Template
-from app.main import UPLOAD_DIR, app, BASE_DIR, UPLOAD_DIR
+from app.main import UPLOAD_DIR, app, BASE_DIR, UPLOAD_DIR, get_settings
 
 from PIL import Image, ImageChops
 
@@ -78,12 +78,15 @@ def test_echo_upload():
 
 def test_prediction_upload():
     img_saved_path =BASE_DIR / "images"
+    settings = get_settings()
     for path in img_saved_path.glob("*"):
         try:
             img = Image.open(path)
         except:
             img = None
-        response = client.post("/", files={"file": open(path, 'rb')})      # requests.get("") python requests
+        response = client.post("/",
+                               files={"file": open(path, 'rb')},
+                               headers={"Authorization": f"JWT {settings.app_auth_token}"})      # requests.get("") python requests
         if img is not None:
             #print(response.text)
             assert response.status_code == 200
@@ -92,5 +95,20 @@ def test_prediction_upload():
             assert len(data.keys()) == 2
         else:
             assert response.status_code == 400
+        print(response.headers)
+        print(path.suffix)
+
+def test_prediction_upload_missing_headers():
+    img_saved_path =BASE_DIR / "images"
+    settings = get_settings()
+    for path in img_saved_path.glob("*"):
+        try:
+            img = Image.open(path)
+        except:
+            img = None
+        response = client.post("/",
+                               files={"file": open(path, 'rb')}
+                               )
+        assert response.status_code == 401
         print(response.headers)
         print(path.suffix)
